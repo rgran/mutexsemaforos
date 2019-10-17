@@ -6,7 +6,8 @@
 // Description: Mutex implementation and performance assesment
 /*--------------------------------------------------------------------------------------*/
 
-
+#ifndef CDH_H
+#define CDH_H
 
 class cdh
 {

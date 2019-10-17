@@ -6,7 +6,8 @@
 // Description: Mutex implementation and performance assesment
 /*--------------------------------------------------------------------------------------*/
 
-
+#ifndef PFS_H
+#define PFS_H
 
 class mutex
 {
