@@ -19,12 +19,13 @@ LDFLAGS=-pthread                           # opciones de "linkado"
 EJEC = pruebaSemaforos
 SEM = Semaphore
 MTX = pfs
+CDH = cdh
 
 all: ${EJEC}
 #---------------------------------------------------------
 # "linkar"
-${EJEC}: ${EJEC}.o ${SEM}.o ${MTX}.o
-	${CC} ${EJEC}.o ${SEM}.o ${MTX}.o -o ${EJEC} ${CPPFLAGS} ${LDFLAGS}
+${EJEC}: ${EJEC}.o ${SEM}.o ${MTX}.o ${CDH}.o
+	${CC} ${EJEC}.o ${SEM}.o ${MTX}.o ${CDH}.o -o ${EJEC} ${CPPFLAGS} ${LDFLAGS}
 
 #---------------------------------------------------------
 # compilar
@@ -36,7 +37,10 @@ ${SEM}.o: ${SEM}.hpp ${SEM}.cpp
 
 ${MTX}.o: ${MTX}.hpp ${MTX}.cpp
 	${CC} -c ${MTX}.cpp ${CPPFLAGS}
+
+${CDH}.o: ${CDH}.hpp ${CDH}.cpp
+	${CC} -c ${CDH}.cpp ${CPPFLAGS}
 #---------------------------------------------------------
 # Cuidado con lo que se pone aquí, que se borra sin preguntar
 clean:
-	$(RM) ${MTX}.o ${SEM}.o ${EJEC}.o ${EJEC}
+	$(RM) ${CDH}.o ${MTX}.o ${SEM}.o ${EJEC}.o ${EJEC}
