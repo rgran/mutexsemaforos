@@ -44,55 +44,70 @@ Semaphore::~Semaphore() {
 }
 //----------------------------------------------------------
 void Semaphore::setInitValue(int n) {
-    std::unique_lock<mutex> lck(mtx); //mutex para atomicidad de la función
+
+    mtx.lock();
 
     assert(!initialized && n >= 0);
 
     count = n;
     initialized = true;
 
-
+    mtx.unlock();
 }
 //----------------------------------------------------------
 void Semaphore::signal() {
-    std::unique_lock<mutex> lck(mtx);
+
+	mtx.lock();
 
     assert(initialized);
 
     count++;
-    cv.notify_all(); //podemos cambiar la semántica con cv.notify_one()
 
+	cola_suspendidos.despertar(); 
+
+	mtx.unlock();
 }
 //----------------------------------------------------------
 void Semaphore::wait() {
-    std::unique_lock<mutex> lck(mtx);
+
+	mtx.lock();
 
     assert(initialized);
 
     while(count == 0) {
-        cv.wait(lck);
+		mtx.unlock();
+		cola_suspendidos.adormir();
+		mtx.lock();
     }
     count--;
+
+	mtx.unlock();
 }
 //----------------------------------------------------------
 void Semaphore::signal(int n) {
-    std::unique_lock<mutex> lck(mtx);
+	
+	mtx.lock();
 
     assert(initialized && n>0);
 
     count = count+n;
-    cv.notify_all(); //podemos cambiar la semántica con cv.notify_one()
+	cola_suspendidos.despertar(); 
 
+	mtx.unlock();
 }
 //----------------------------------------------------------
 void Semaphore::wait(int n) {
-    std::unique_lock<mutex> lck(mtx);
+	
+	mtx.lock();
 
     assert(initialized && n>0);
 
     while(count < n) {
-        cv.wait(lck);
+		mtx.unlock();
+		cola_suspendidos.adormir();
+		mtx.lock();
     }
     count = count-n;
 
+	mtx.unlock();
 }

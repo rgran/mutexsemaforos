@@ -18,20 +18,15 @@
 #define SEMAPHORE_HPP
 
 
-//#include <mutex>
-#include <condition_variable>
 #include <assert.h>
 #include <pfs.hpp>
-
-//using namespace std; //mutex, condition_variable, etc.
+#include <cdh.hpp>
 
 class Semaphore {
 private:
-//	mipthread_mutex_t mi_mutex;
-//    char MUTEX_IMPLE = 's';   // Seleccion de implmetaciÃ³n de mutex con futex: s, spinlock; n, naive; y K, Kdrepper 
-    mutex mtx;          //los dos primeros atributos se entenderán más adelante
-    std::condition_variable_any cv;
-    int count;                    //natural asociado al semáforo  
+    cdh cola_suspendidos;
+    mutex mtx;          
+	int count;                    //natural asociado al semáforo  
     bool initialized;             //para manejar dos constructores distintos
 
 public:
