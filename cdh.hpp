@@ -6,8 +6,8 @@
 // Description: Mutex implementation and performance assesment
 /*--------------------------------------------------------------------------------------*/
 
-#ifndef CDH_H
-#define CDH_H
+#ifndef CDH_HPP
+#define CDH_HPP
 
 class cdh
 {
@@ -23,3 +23,5 @@ class cdh
   private:
 	//friend class Lock;
 };
+
+#endif

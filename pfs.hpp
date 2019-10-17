@@ -6,8 +6,8 @@
 // Description: Mutex implementation and performance assesment
 /*--------------------------------------------------------------------------------------*/
 
-#ifndef PFS_H
-#define PFS_H
+#ifndef PFS_HPP
+#define PFS_HPP
 
 class mutex
 {
@@ -22,3 +22,5 @@ class mutex
   private:
 	//friend class Lock;
 };
+
+#endif
