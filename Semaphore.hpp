@@ -1,7 +1,7 @@
 //*****************************************************************
 // File:   Semaphore.hpp
-// Author: PSCD-Unizar
-// Date:   octubre 2016
+// Author: Unizar
+// Date:   octubre 2019
 // Coms:   Especificación de una clase de semáforos, extendida, con operaciones
 //         "wait(nat)" y "signal(nat)"
 //         El valor transmitido en la inicialización ha de ser
@@ -9,9 +9,6 @@
 //         La semántica que implementa es la que en
 //         M. Ben-Ari, "Principles of Concurrent and Distributed Programming", Addison-Wesley, 2006
 //         denomina "Busy-wait" (ver pág. 120)
-//         Para los casos en que el uso del semáforo va a ser exclusivamente como "mutex", Cpp
-//         suministra la clase "std::mutex", cuya especificación se encuentra en 
-//         http://en.cppreference.com/w/cpp/thread/mutex
 //*****************************************************************
 
 #ifndef SEMAPHORE_HPP

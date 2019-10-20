@@ -1,7 +1,7 @@
 //*****************************************************************
 // File:   Semaphore.cpp
-// Author: PSCD-Unizar
-// Date:   octubre 2016
+// Author: Unizar
+// Date:   octubre 2019
 // Coms:   Ver Semaphore.h
 //         La implementación se entenderá cuando veamos variables
 //         condición y monitores
@@ -10,17 +10,6 @@
 //Infoŕmación útil para entender la implementación en
 //http://en.cppreference.com/w/cpp/thread/condition_variable
 //La estudiaremos con más detalle cuando tratemos en la asignatura la parte de "monitores"
-
-//"The condition_variable class is a synchronization primitive that can be used to block a thread,
-//or multiple threads at the same time, until:
-//a notification is received from another thread
-//a timeout expires, or
-//a spurious wakeup occurs
-//Any thread that intends to wait on std::condition_variable has to acquire a std::unique_lock first.
-//The wait operations atomically release the mutex and suspend the execution of the thread. When the
-//condition variable is notified, the thread is awakened, and the mutex is reacquired.
-//Condition variables permit concurrent invocation of the wait, wait_for, wait_until, notify_one and
-//notify_all member functions."
 
 #include <Semaphore.hpp>
 
@@ -43,10 +32,12 @@ Semaphore::~Semaphore() {
 }
 //----------------------------------------------------------
 void Semaphore::adormir(int ve){
-syscall(__NR_futex, &(count), FUTEX_WAIT, ve, NULL, 0, 0);
+//	suspende la ejecución del hilo si el valor de ve no coincide con el de count
+	syscall(__NR_futex, &(count), FUTEX_WAIT, ve, NULL, 0, 0);
 }
 //----------------------------------------------------------
 void Semaphore::despertar(){
+// despierta a todos los hilos para los que fue suspendida su ejecución hasta el momento
 	syscall(__NR_futex, &(count), FUTEX_WAKE, INT_MAX, NULL, 0, 0);
 }
 //----------------------------------------------------------
@@ -85,7 +76,6 @@ void Semaphore::wait() {
 		int vr = count;		
 		mtx.unlock();
 		adormir(vr);
-//		cola_suspendidos.adormir();
 		mtx.lock();
     }
     count--;
@@ -100,7 +90,6 @@ void Semaphore::signal(int n) {
     assert(initialized && n>0);
 
     count = count+n;
-//	cola_suspendidos.despertar(); 
 
 	mtx.unlock();
 }
@@ -115,7 +104,6 @@ void Semaphore::wait(int n) {
 		int vr = count; 
 		mtx.unlock();
 		adormir(vr);
-//		cola_suspendidos.adormir();
 		mtx.lock();
     }
     count = count-n;
