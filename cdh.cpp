@@ -17,6 +17,7 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include <iostream>
+#include <thread>
 #include "cdh.hpp"
 
 cdh::cdh(){
@@ -36,13 +37,16 @@ cdh::~cdh()
 
 void cdh::adormir(){
 	// si el valor de futex_suspension y el de valor_comparaciÃn son iguales, el hilo quedara suspendido (dormido)
-	this.durmiendo ++;
-	syscall(__NR_futex, &(this.futex_suspension), FUTEX_WAIT, this.valor_comparacion, NULL, 0, 0);
+	durmiendo ++;
+	std::cout << std::this_thread::get_id() << " a dormir " << durmiendo << std::endl;
+	syscall(__NR_futex, &(futex_suspension), FUTEX_WAIT, valor_comparacion, NULL, 0, 0);
 }
 
 void cdh::despertar(){
-	this.durmiendo = 0;
-	syscall(__NR_futex, &(this.futex_suspension), FUTEX_WAKE, INT_MAX, NULL, 0, 0);
+	durmiendo = 0;
+	syscall(__NR_futex, &(futex_suspension), FUTEX_WAKE, INT_MAX, NULL, 0, 0);
 
+
+    std::cout << std::this_thread::get_id() << "despertar " << durmiendo << std::endl; 
 }
 

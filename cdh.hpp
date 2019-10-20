@@ -9,12 +9,14 @@
 #ifndef CDH_HPP
 #define CDH_HPP
 
+#include <atomic>
+
 class cdh
 {
   private:
     const int valor_comparacion = 100; //valor contra el que se compara el de futex_suspensiÃ³n y lograr la suspensiÃ³n del proceso  
     int futex_suspension;
-    std::atomic<int> esperando; //cuantos hilos hay esperando
+    std::atomic<int> durmiendo; //cuantos hilos hay esperando
   public:
 	cdh();
 	~cdh();
