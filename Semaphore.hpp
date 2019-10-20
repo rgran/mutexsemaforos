@@ -20,11 +20,9 @@
 
 #include <assert.h>
 #include <pfs.hpp>
-#include <cdh.hpp>
 
 class Semaphore {
 private:
-    cdh cola_suspendidos;
     mutex mtx;          
 	int count;                    //natural asociado al semáforo  
     bool initialized;             //para manejar dos constructores distintos

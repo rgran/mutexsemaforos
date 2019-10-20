@@ -63,8 +63,6 @@ void Semaphore::signal() {
     assert(initialized);
 
     count++;
-//std::cout << std::this_thread::get_id() << " signal valor de semaforo " << count << std::endl;
-//	cola_suspendidos.despertar(); 
 
 	mtx.unlock();
 }
@@ -75,14 +73,10 @@ void Semaphore::wait() {
 
     assert(initialized);
 
-//std::cout << std::this_thread::get_id() << " wait antes bucle valor de semaforo " << count << std::endl;
     while(count == 0) {
 		mtx.unlock();
-//		cola_suspendidos.adormir();
 		mtx.lock();
-//std::cout << std::this_thread::get_id() << " wait dentro bucle valor de semaforo " << count << std::endl;
     }
-//std::cout << std::this_thread::get_id() << " wait despues bucle valor de semaforo " << count << std::endl;
     count--;
 
 	mtx.unlock();
@@ -95,7 +89,6 @@ void Semaphore::signal(int n) {
     assert(initialized && n>0);
 
     count = count+n;
-//	cola_suspendidos.despertar(); 
 
 	mtx.unlock();
 }
@@ -108,7 +101,6 @@ void Semaphore::wait(int n) {
 
     while(count < n) {
 		mtx.unlock();
-//		cola_suspendidos.adormir();
 		mtx.lock();
     }
     count = count-n;
