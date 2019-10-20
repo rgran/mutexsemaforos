@@ -22,7 +22,6 @@
 //Condition variables permit concurrent invocation of the wait, wait_for, wait_until, notify_one and
 //notify_all member functions."
 
-
 #include <Semaphore.hpp>
 
 
@@ -41,6 +40,14 @@ Semaphore::Semaphore() {
 Semaphore::~Semaphore() {
     //nada que hacer
 
+}
+//----------------------------------------------------------
+void Semaphore::adormir(int ve){
+syscall(__NR_futex, &(count), FUTEX_WAIT, ve, NULL, 0, 0);
+}
+//----------------------------------------------------------
+void Semaphore::despertar(){
+	syscall(__NR_futex, &(count), FUTEX_WAKE, INT_MAX, NULL, 0, 0);
 }
 //----------------------------------------------------------
 void Semaphore::setInitValue(int n) {
@@ -62,21 +69,23 @@ void Semaphore::signal() {
     assert(initialized);
 
     count++;
-
-	cola_suspendidos.despertar(); 
+	
+	despertar();
 
 	mtx.unlock();
 }
 //----------------------------------------------------------
 void Semaphore::wait() {
-
+	
 	mtx.lock();
 
     assert(initialized);
 
     while(count == 0) {
+		int vr = count;		
 		mtx.unlock();
-		cola_suspendidos.adormir();
+		adormir(vr);
+//		cola_suspendidos.adormir();
 		mtx.lock();
     }
     count--;
@@ -91,7 +100,7 @@ void Semaphore::signal(int n) {
     assert(initialized && n>0);
 
     count = count+n;
-	cola_suspendidos.despertar(); 
+//	cola_suspendidos.despertar(); 
 
 	mtx.unlock();
 }
@@ -103,8 +112,10 @@ void Semaphore::wait(int n) {
     assert(initialized && n>0);
 
     while(count < n) {
+		int vr = count; 
 		mtx.unlock();
-		cola_suspendidos.adormir();
+		adormir(vr);
+//		cola_suspendidos.adormir();
 		mtx.lock();
     }
     count = count-n;

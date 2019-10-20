@@ -17,18 +17,26 @@
 #ifndef SEMAPHORE_HPP
 #define SEMAPHORE_HPP
 
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <linux/futex.h>
+#include <sys/syscall.h>
+#include <unistd.h>
+#include <limits.h>
+#include <stdint.h>
+#include <inttypes.h>
 #include <assert.h>
 #include <pfs.hpp>
-#include <cdh.hpp>
 
 class Semaphore {
 private:
-    cdh cola_suspendidos;
     mutex mtx;          
 	int count;                    //natural asociado al semáforo  
     bool initialized;             //para manejar dos constructores distintos
 
+	void adormir (int ve); 			//dormira si ve es igual a count
+	void despertar ();
 public:
 	//------------------------- constructores
     //Pre:
